@@ -31,17 +31,17 @@ jobs:
         run: npm run build:ts
       - name: Build Electron app (macOS)
         if: matrix.platform == 'mac'
-        run: npm run build:mac
+        run: npm run build:mac  -- --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Electron app (Linux)
         if: matrix.platform == 'linux'
-        run: npm run build:linux
+        run: npm run build:linux  -- --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Electron app (Windows)
         if: matrix.platform == 'win'
-        run: npm run build:win
+        run: npm run build:win  -- --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload artifacts (macOS)
