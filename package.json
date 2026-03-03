@@ -1,6 +1,6 @@
 {
   "name": "secure-exam-terminal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A secure, locked-down terminal/SSH client for exam environments",
   "main": "dist/main.js",
   "scripts": {
@@ -23,7 +23,10 @@
     "secure",
     "lockdown"
   ],
-  "author": "",
+  "author": {
+    "name": "Cristian Leonte",
+    "email": "cleonte@users.noreply.github.com"
+  },
   "license": "MIT",
   "dependencies": {
     "@xterm/addon-fit": "^0.11.0",
