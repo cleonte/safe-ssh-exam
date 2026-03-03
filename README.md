@@ -135,7 +135,9 @@ npm start
 
 ## Building
 
-Build platform-specific executables:
+### Local Build
+
+Build platform-specific executables locally:
 
 ```bash
 # macOS
@@ -152,6 +154,33 @@ npm run build
 ```
 
 Executables will be in the `dist/` directory.
+
+### Automated Releases (GitHub Actions)
+
+The repository includes a GitHub Actions workflow that automatically builds binaries for all platforms when you create a release tag.
+
+**To create a new release:**
+
+1. Update version in `package.json`
+2. Commit the changes
+3. Create and push a git tag:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+4. GitHub Actions will automatically:
+   - Build binaries for macOS, Windows, and Linux
+   - Create a GitHub release
+   - Upload all binaries to the release
+
+**Manual trigger:**
+
+You can also manually trigger the build from the GitHub Actions tab without creating a tag.
+
+**Download releases:**
+
+Pre-built binaries are available on the [Releases page](https://github.com/cleonte/safe-ssh-exam/releases).
 
 ## Session Logs
 
