@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Exam Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Secure Exam Terminal</h1>
+            <p class="tagline">A locked-down terminal/SSH client designed for secure exam environments</p>
+            <div class="links">
+                <a href="https://github.com/cleonte/safe-ssh-exam" class="btn btn-primary">View on GitHub</a>
+                <a href="https://github.com/cleonte/safe-ssh-exam/releases" class="btn btn-secondary">Download</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="about">
+            <p class="note">
+                <strong>Note:</strong> This project was developed with AI assistance using 
+                <a href="https://opencode.ai">OpenCode</a>.
+            </p>
+        </section>
+
+        <section id="features">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>Fullscreen Kiosk Mode:</strong> Runs in fullscreen kiosk mode to prevent app switching</li>
+                <li><strong>System Shortcut Blocking:</strong> Prevents Alt+Tab, screenshots, and other system shortcuts</li>
+                <li><strong>Multiple Exit Methods:</strong>
+                    <ul>
+                        <li>Press F12 or Cmd+Q/Ctrl+Q to exit with admin password</li>
+                        <li>Click the red "Exit" button in the header</li>
+                    </ul>
+                </li>
+                <li><strong>Multiple Tabs:</strong> Support for up to 2 concurrent SSH sessions</li>
+                <li><strong>SSH Host Whitelisting:</strong> Only allows connections to pre-approved exam servers</li>
+                <li><strong>Session Recording:</strong> Logs all terminal input/output for review (separate logs per tab)</li>
+                <li><strong>Time Limits:</strong> Automatic session termination after configured duration</li>
+                <li><strong>Copy/Paste Control:</strong> Can disable clipboard operations</li>
+                <li><strong>Admin Password Protection:</strong> Requires password to exit the application</li>
+            </ul>
+        </section>
+
+        <section id="installation">
+            <h2>Installation</h2>
+            <p>Install dependencies:</p>
+            <pre><code>npm install</code></pre>
+        </section>
+
+        <section id="configuration">
+            <h2>Configuration</h2>
+            <p>Copy the example configuration file:</p>
+            <pre><code>cp exam-config.example.json exam-config.json</code></pre>
+            
+            <p>Edit <code>exam-config.json</code> to configure the exam environment:</p>
+            <pre><code>{
+  "allowedHosts": [
+    {
+      "host": "exam-server.university.edu",
+      "port": 22,
+      "description": "Main exam server"
+    }
+  ],
+  "sessionDuration": 7200,
+  "maxTabs": 2,
+  "allowCopyPaste": false,
+  "recordSession": true,
+  "sessionRecordingPath": "./sessions",
+  "requirePassword": true,
+  "adminPassword": "your-secure-password-here",
+  "exitMessage": "Exam session ended. Please close the application.",
+  "warnings": {
+    "5min": true,
+    "1min": true
+  }
+}</code></pre>
+
+            <p class="warning">
+                <strong>Important:</strong> Never commit <code>exam-config.json</code> to version control 
+                as it contains sensitive passwords and server information. Use <code>exam-config.example.json</code> as a template.
+            </p>
+
+            <h3>Configuration Options</h3>
+            <ul>
+                <li><strong>allowedHosts:</strong> Array of SSH servers students can connect to
+                    <ul>
+                        <li><code>host</code>: Server hostname or IP address</li>
+                        <li><code>port</code>: SSH port (usually 22)</li>
+                        <li><code>description</code>: Human-readable description shown to students</li>
+                    </ul>
+                </li>
+                <li><strong>sessionDuration:</strong> Exam duration in seconds (7200 = 2 hours)</li>
+                <li><strong>maxTabs:</strong> Maximum number of concurrent SSH tabs allowed (default: 2)</li>
+                <li><strong>allowCopyPaste:</strong> Enable/disable clipboard operations (true/false)</li>
+                <li><strong>recordSession:</strong> Enable session logging (true/false)</li>
+                <li><strong>sessionRecordingPath:</strong> Directory where session logs are saved</li>
+                <li><strong>requirePassword:</strong> Require admin password to exit (true/false)</li>
+                <li><strong>adminPassword:</strong> Password required to exit the application (leave empty to disable)</li>
+                <li><strong>exitMessage:</strong> Message shown when session ends</li>
+                <li><strong>warnings:</strong> Show time warnings
+                    <ul>
+                        <li><code>5min</code>: Show warning at 5 minutes remaining</li>
+                        <li><code>1min</code>: Show warning at 1 minute remaining</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="usage">
+            <h2>Usage</h2>
+            
+            <h3>For Administrators</h3>
+            <ol>
+                <li>Copy the example configuration:
+                    <pre><code>cp exam-config.example.json exam-config.json</code></pre>
+                </li>
+                <li>Configure <code>exam-config.json</code> with your exam servers and settings</li>
+                <li>Set a secure admin password:
+                    <pre><code>"adminPassword": "your-secure-password"</code></pre>
+                </li>
+                <li>Start the application:
+                    <pre><code>npm start</code></pre>
+                </li>
+                <li>To exit during testing:
+                    <ul>
+                        <li>Press <strong>F12</strong> or <strong>Cmd+Q</strong> (macOS) / <strong>Ctrl+Q</strong> (Windows/Linux)</li>
+                        <li>Click the red <strong>"Exit"</strong> button in the header</li>
+                        <li>Enter the admin password</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>For Students</h3>
+            <ol>
+                <li>Launch the Secure Exam Terminal application</li>
+                <li>Select the exam server from the dropdown</li>
+                <li>Enter your credentials</li>
+                <li>Click "Connect"</li>
+                <li><strong>Working with Multiple Tabs:</strong>
+                    <ul>
+                        <li>Click the <strong>+</strong> button or press <strong>Ctrl+T</strong> to open a new tab (up to 2 tabs)</li>
+                        <li>Switch between tabs using <strong>Ctrl+1</strong> and <strong>Ctrl+2</strong></li>
+                        <li>Click the <strong>×</strong> on a tab to close it (requires confirmation)</li>
+                        <li>Each tab runs an independent SSH session to the same server</li>
+                    </ul>
+                </li>
+                <li>Complete your exam tasks</li>
+                <li>The session will automatically end when time expires</li>
+            </ol>
+        </section>
+
+        <section id="building">
+            <h2>Building</h2>
+            
+            <h3>Local Build</h3>
+            <p>Build platform-specific executables locally:</p>
+            <pre><code># macOS
+npm run build:mac
+
+# Windows
+npm run build:win
+
+# Linux
+npm run build:linux
+
+# All platforms
+npm run build</code></pre>
+            <p>Executables will be in the <code>dist/</code> directory.</p>
+
+            <h3>Automated Releases (GitHub Actions)</h3>
+            <p>The repository includes a GitHub Actions workflow that automatically builds binaries for all platforms when you create a release tag.</p>
+            
+            <p><strong>To create a new release:</strong></p>
+            <ol>
+                <li>Update version in <code>package.json</code></li>
+                <li>Commit the changes</li>
+                <li>Create and push a git tag:
+                    <pre><code>git tag v1.0.0
+git push origin v1.0.0</code></pre>
+                </li>
+                <li>GitHub Actions will automatically:
+                    <ul>
+                        <li>Build binaries for macOS, Windows, and Linux</li>
+                        <li>Create a GitHub release</li>
+                        <li>Upload all binaries to the release</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p><strong>Download releases:</strong></p>
+            <p>Pre-built binaries are available on the <a href="https://github.com/cleonte/safe-ssh-exam/releases">Releases page</a>.</p>
+        </section>
+
+        <section id="keyboard-shortcuts">
+            <h2>Keyboard Shortcuts</h2>
+            
+            <h3>Student Shortcuts (Enabled)</h3>
+            <ul>
+                <li><strong>Ctrl+T</strong> - Open new tab (up to max limit)</li>
+                <li><strong>Ctrl+1</strong> - Switch to tab 1</li>
+                <li><strong>Ctrl+2</strong> - Switch to tab 2</li>
+            </ul>
+
+            <h3>Admin Shortcuts</h3>
+            <ul>
+                <li><strong>F12</strong> - Exit application (requires admin password)</li>
+                <li><strong>Cmd+Q</strong> (macOS) / <strong>Ctrl+Q</strong> (Windows/Linux) - Exit application (requires admin password)</li>
+                <li><strong>Red "Exit" button</strong> in header - Exit application (requires admin password)</li>
+            </ul>
+        </section>
+
+        <section id="security">
+            <h2>Security Features</h2>
+            
+            <h3>Blocked Shortcuts</h3>
+            <p>The following shortcuts are blocked to prevent students from exiting or switching applications:</p>
+            <ul>
+                <li>Cmd+W / Ctrl+W (Close window)</li>
+                <li>Cmd+Tab / Alt+Tab (Switch applications)</li>
+                <li>Cmd+M / Cmd+H (Minimize/Hide)</li>
+                <li>F11 (Fullscreen toggle)</li>
+                <li>Cmd+Option+Esc (Force quit menu)</li>
+                <li>Ctrl+Alt+Delete (Task manager)</li>
+                <li>Right-click context menu</li>
+            </ul>
+
+            <h3>Additional Protections</h3>
+            <ul>
+                <li>Kiosk mode prevents window manipulation and app switching</li>
+                <li>Browser DevTools disabled</li>
+                <li>Navigation and new windows blocked</li>
+                <li>Window always stays focused</li>
+                <li>Optional clipboard restrictions</li>
+                <li>Tab closing requires confirmation</li>
+            </ul>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Student cannot connect</h3>
+            <ul>
+                <li>Verify the server hostname and port in <code>exam-config.json</code></li>
+                <li>Ensure the SSH server is accessible from student machines</li>
+                <li>Check student credentials are correct</li>
+            </ul>
+
+            <h3>Cannot exit the application</h3>
+            <ul>
+                <li>Press <strong>F12</strong> or <strong>Cmd+Q</strong> (macOS) / <strong>Ctrl+Q</strong> (Windows/Linux) to bring up the exit dialog</li>
+                <li>Click the red <strong>"Exit"</strong> button in the header</li>
+                <li>Enter the configured admin password</li>
+                <li>If password is forgotten, you may need to force quit from Activity Monitor/Task Manager</li>
+                <li>On macOS: Cmd+Option+Esc → Force Quit</li>
+                <li>On Windows: Ctrl+Shift+Esc → Task Manager → End Task</li>
+            </ul>
+
+            <h3>Tab-related issues</h3>
+            <ul>
+                <li><strong>Cannot open new tab:</strong> Check if you've reached the maximum tab limit (default: 2)</li>
+                <li><strong>Tab closes automatically:</strong> The SSH connection may have failed - check the terminal output in that tab</li>
+                <li><strong>All tabs closed accidentally:</strong> The application returns to the connection panel - reconnect using the same credentials</li>
+            </ul>
+
+            <h3>Session logs not being created</h3>
+            <ul>
+                <li>Check that <code>recordSession</code> is set to <code>true</code></li>
+                <li>Verify the <code>sessionRecordingPath</code> directory exists and is writable</li>
+                <li>Check file permissions</li>
+            </ul>
+        </section>
+
+        <section id="credits">
+            <h2>Credits</h2>
+            <p>This project was developed with AI assistance using <a href="https://opencode.ai">OpenCode</a>.</p>
+        </section>
+
+        <section id="license">
+            <h2>License</h2>
+            <p>MIT</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Cristian Leonte. Released under the MIT License.</p>
+            <p>
+                <a href="https://github.com/cleonte/safe-ssh-exam">GitHub</a> | 
+                <a href="https://github.com/cleonte/safe-ssh-exam/releases">Releases</a> | 
+                <a href="https://github.com/cleonte/safe-ssh-exam/issues">Issues</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
