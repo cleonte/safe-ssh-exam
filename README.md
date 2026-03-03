@@ -2,9 +2,11 @@
 
 A locked-down terminal/SSH client designed for secure exam environments, similar to Safe Exam Browser but for command-line access.
 
+> **Note:** This project was developed with AI assistance using [OpenCode](https://opencode.ai).
+
 ## Features
 
-- **Fullscreen Mode**: Runs in fullscreen with enhanced exit protection
+- **Fullscreen Kiosk Mode**: Runs in fullscreen kiosk mode to prevent app switching
 - **System Shortcut Blocking**: Prevents Alt+Tab, screenshots, and other system shortcuts
 - **Multiple Exit Methods**: 
   - Press F12 or Cmd+Q/Ctrl+Q to exit with admin password
@@ -196,7 +198,7 @@ The following shortcuts are blocked to prevent students from exiting or switchin
 
 ### Additional Protections
 
-- Fullscreen mode prevents window manipulation
+- Kiosk mode prevents window manipulation and app switching
 - Browser DevTools disabled
 - Navigation and new windows blocked
 - Window always stays focused
@@ -238,6 +240,10 @@ npm run dev
 - Check that `recordSession` is set to `true`
 - Verify the `sessionRecordingPath` directory exists and is writable
 - Check file permissions
+
+## Credits
+
+This project was developed with AI assistance using [OpenCode](https://opencode.ai).
 
 ## License
 

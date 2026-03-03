@@ -147,6 +147,7 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     fullscreen: !devMode,
+    kiosk: !devMode,  // Kiosk mode prevents app switching
     frame: devMode,  // Show frame in dev mode
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
