@@ -1,0 +1,24 @@
+{
+  "devMode": false,
+  "allowedHosts": [
+    {
+      "host": "example.com",
+      "port": 22,
+      "description": "Example SSH server"
+    }
+  ],
+  "sessionDuration": 7200,
+  "maxTabs": 2,
+  "allowCopyPaste": false,
+  "recordSession": true,
+  "sessionRecordingPath": "./sessions",
+  "allowedCommands": [],
+  "blockedCommands": [],
+  "requirePassword": true,
+  "adminPassword": "CHANGE_ME_SECURE_PASSWORD",
+  "exitMessage": "Exam session ended. Please close the application.",
+  "warnings": {
+    "5min": true,
+    "1min": true
+  }
+}

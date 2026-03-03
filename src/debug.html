@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Test</title>
+</head>
+<body>
+  <h1>Debug Test</h1>
+  <div id="test">Loading...</div>
+  
+  <script>
+    console.log('Script loaded');
+    console.log('window.examAPI:', window.examAPI);
+    console.log('window.examConfig:', window.examConfig);
+    
+    setTimeout(() => {
+      console.log('After 1 second - window.examConfig:', window.examConfig);
+      document.getElementById('test').textContent = 
+        window.examConfig ? JSON.stringify(window.examConfig, null, 2) : 'No config';
+    }, 1000);
+  </script>
+</body>
+</html>

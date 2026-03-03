@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Exam Terminal</title>
+  <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header with timer and status -->
+    <div id="header">
+      <div id="status">
+        <span id="status-indicator" class="connected">⬤</span>
+        <span id="status-text">Not Connected</span>
+      </div>
+      <div id="timer">
+        <span id="time-remaining">--:--</span>
+      </div>
+      <button id="admin-exit-btn" title="Exit Exam (F12 or Cmd/Ctrl+Q)">Exit</button>
+    </div>
+
+    <!-- Tab bar -->
+    <div id="tab-bar" class="hidden">
+      <div id="tabs-container">
+        <!-- Tabs will be dynamically added here -->
+      </div>
+      <button id="new-tab-btn" title="New Tab (Ctrl+T)">+</button>
+    </div>
+
+    <!-- Connection panel -->
+    <div id="connection-panel">
+      <h2>Secure Exam Terminal</h2>
+      <div id="host-selection">
+        <label>Select Exam Server:</label>
+        <select id="host-select">
+          <option value="">-- Select Server --</option>
+        </select>
+      </div>
+      <div id="credentials">
+        <input type="text" id="username" placeholder="Username" autocomplete="off">
+        <input type="password" id="password" placeholder="Password" autocomplete="off">
+      </div>
+      <button id="connect-btn">Connect</button>
+      <div id="connection-error" class="error hidden"></div>
+    </div>
+
+    <!-- Terminals area -->
+    <div id="terminals-area" class="hidden">
+      <!-- Terminal tab containers will be dynamically added here -->
+    </div>
+
+    <!-- Warning overlay -->
+    <div id="warning-overlay" class="hidden">
+      <div id="warning-content">
+        <div class="warning-icon">⚠️</div>
+        <div id="warning-message"></div>
+      </div>
+    </div>
+
+    <!-- Admin password dialog -->
+    <div id="admin-dialog" class="hidden">
+      <div id="admin-content">
+        <h3>Administrator Password Required</h3>
+        <p>Enter administrator password to exit:</p>
+        <input type="password" id="admin-password" autocomplete="off">
+        <div class="admin-buttons">
+          <button id="admin-submit">Submit</button>
+          <button id="admin-cancel">Cancel</button>
+        </div>
+        <div id="admin-error" class="error hidden">Incorrect password</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('HTML loaded, about to load renderer.js');
+    // With nodeIntegration enabled, we can use require
+    try {
+      const path = require('path');
+      const rendererPath = path.join(__dirname, '../dist/renderer.js');
+      console.log('Loading renderer from:', rendererPath);
+      require(rendererPath);
+      console.log('Renderer loaded successfully');
+    } catch (error) {
+      console.error('Error loading renderer:', error);
+      alert('Error loading renderer: ' + error.message);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Session recordings (sensitive data)
+sessions/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+# Configuration files with sensitive data (passwords, server info)
+exam-config.json
+exam-config.local.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
