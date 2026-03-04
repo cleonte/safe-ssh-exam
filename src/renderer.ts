@@ -197,14 +197,15 @@ function resizeActiveTerminal(): void {
   if (activeTab && activeTab.fitAddon) {
     try {
       activeTab.fitAddon.fit();
+      console.log(`Terminal resized: ${activeTab.terminal.cols}x${activeTab.terminal.rows}`);
       
       // Update SSH window size if connected
       if (activeTab.sshStream) {
         activeTab.sshStream.setWindow(
           activeTab.terminal.rows,
           activeTab.terminal.cols,
-          480,
-          640
+          activeTab.terminal.rows * 16,  // height in pixels (approximate)
+          activeTab.terminal.cols * 8    // width in pixels (approximate)
         );
       }
     } catch (error) {
@@ -326,13 +327,25 @@ function createTab(isFirstTab = false) {
   terminal.open(containerElement);
   
   // Fit terminal to container after a small delay to ensure proper layout
+  // Use longer delay and multiple retries to ensure container is fully rendered
   setTimeout(() => {
     try {
       fitAddon.fit();
+      console.log(`Terminal ${tabId} fitted: ${terminal.cols}x${terminal.rows}`);
     } catch (error) {
       console.error('Error fitting terminal on creation:', error);
     }
-  }, 10);
+  }, 50);
+  
+  // Additional fit after a longer delay to catch late layout changes
+  setTimeout(() => {
+    try {
+      fitAddon.fit();
+      console.log(`Terminal ${tabId} re-fitted: ${terminal.cols}x${terminal.rows}`);
+    } catch (error) {
+      console.error('Error re-fitting terminal:', error);
+    }
+  }, 200);
   
   // Create tab object
   const tab = {
@@ -434,7 +447,9 @@ function connectTabSSH(tab, isFirstTab) {
     
     // Request shell
     sshClient.shell({
-      term: 'xterm-256color'
+      term: 'xterm-256color',
+      rows: tab.terminal.rows,
+      cols: tab.terminal.cols
     }, (err, stream) => {
       if (err) {
         tab.terminal.write(`\r\nFailed to start shell: ${err.message}\r\n`);
@@ -445,6 +460,23 @@ function connectTabSSH(tab, isFirstTab) {
       }
       
       tab.sshStream = stream;
+      
+      // Fit terminal after SSH connection is established
+      setTimeout(() => {
+        try {
+          tab.fitAddon.fit();
+          console.log(`Tab ${tab.id} fitted after SSH connect: ${tab.terminal.cols}x${tab.terminal.rows}`);
+          // Set initial window size
+          stream.setWindow(
+            tab.terminal.rows,
+            tab.terminal.cols,
+            tab.terminal.rows * 16,
+            tab.terminal.cols * 8
+          );
+        } catch (error) {
+          console.error('Error fitting terminal after SSH connect:', error);
+        }
+      }, 100);
       
       // Handle stream data (output from server)
       stream.on('data', (data) => {
@@ -548,19 +580,24 @@ function switchTab(tabId) {
     }
   });
   
-  // Resize terminal
+  // Resize terminal - wait for layout to settle
   if (tab.fitAddon) {
     setTimeout(() => {
-      tab.fitAddon.fit();
-      if (tab.sshStream) {
-        tab.sshStream.setWindow(
-          tab.terminal.rows,
-          tab.terminal.cols,
-          480,
-          640
-        );
+      try {
+        tab.fitAddon.fit();
+        console.log(`Tab ${tabId} switched and fitted: ${tab.terminal.cols}x${tab.terminal.rows}`);
+        if (tab.sshStream) {
+          tab.sshStream.setWindow(
+            tab.terminal.rows,
+            tab.terminal.cols,
+            480,
+            640
+          );
+        }
+      } catch (error) {
+        console.error(`Error fitting terminal on tab switch:`, error);
       }
-    }, 10);
+    }, 50);
   }
   
   // Update status based on tab connection state
