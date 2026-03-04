@@ -1,6 +1,6 @@
 {
   "name": "secure-exam-terminal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A secure, locked-down terminal/SSH client for exam environments",
   "main": "dist/main.js",
   "scripts": {
