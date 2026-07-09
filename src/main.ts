@@ -1,7 +1,7 @@
 import { app, BrowserWindow, globalShortcut, dialog, ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { ExamConfig } from './types';
+import type { ExamConfig } from './types';
 
 let mainWindow: BrowserWindow | null = null;
 let config: ExamConfig;

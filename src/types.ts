@@ -1,3 +1,7 @@
+import type { Terminal } from '@xterm/xterm';
+import type { FitAddon } from '@xterm/addon-fit';
+import type { Client, ClientChannel } from 'ssh2';
+
 export interface HostInfo {
   host: string;
   port: number;
@@ -32,10 +36,10 @@ export interface ConnectionInfo {
 
 export interface Tab {
   id: number;
-  terminal: any; // xterm Terminal type
-  sshClient: any; // ssh2 Client type
-  sshStream: any; // ssh2 Stream type
-  fitAddon: any; // FitAddon type
+  terminal: Terminal;
+  sshClient: Client | null;
+  sshStream: ClientChannel | null;
+  fitAddon: FitAddon;
   sessionBuffer: string;
   label: string;
   containerElement: HTMLElement;

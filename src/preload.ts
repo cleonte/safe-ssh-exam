@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import { ExamAPI, ExamConfig } from './types';
+import type { ExamAPI, ExamConfig } from './types';
 
 // With contextIsolation: false, we can directly set window properties
 (window as any).examAPI = {
