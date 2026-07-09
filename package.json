@@ -46,6 +46,7 @@
   "build": {
     "appId": "com.secureexam.terminal",
     "productName": "SecureExamTerminal",
+    "npmRebuild": false,
     "files": [
       "dist/**/*",
       "src/index.html",
