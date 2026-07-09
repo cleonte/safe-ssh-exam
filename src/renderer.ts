@@ -1,7 +1,7 @@
 import { Client } from 'ssh2';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { ExamConfig, ConnectionInfo, Tab } from './types';
+import type { ExamConfig, ConnectionInfo, Tab } from './types';
 
 let config: ExamConfig;
 let tabs: Tab[] = [];           // Array of tab objects
@@ -215,7 +215,7 @@ function resizeActiveTerminal(): void {
 }
 
 // Setup keyboard shortcuts
-function setupKeyboardShortcuts() {
+function setupKeyboardShortcuts(): void {
   document.addEventListener('keydown', (e) => {
     // F12 for admin exit
     if (e.key === 'F12') {
@@ -275,19 +275,19 @@ function handleConnect(): void {
   };
   
   // Clear any previous errors
-  document.getElementById('connection-error').classList.add('hidden');
-  
+  getElement('connection-error').classList.add('hidden');
+
   // Hide connection panel and show tab bar + terminals area
-  document.getElementById('connection-panel').classList.add('hidden');
-  document.getElementById('tab-bar').classList.remove('hidden');
-  document.getElementById('terminals-area').classList.remove('hidden');
+  getElement('connection-panel').classList.add('hidden');
+  getElement('tab-bar').classList.remove('hidden');
+  getElement('terminals-area').classList.remove('hidden');
   
   // Create first tab
   createTab(true);
 }
 
 // Create a new tab
-function createTab(isFirstTab = false) {
+function createTab(isFirstTab: boolean = false): void {
   if (!connectionInfo) {
     showError('No connection information available');
     return;
@@ -321,7 +321,7 @@ function createTab(isFirstTab = false) {
   const containerElement = document.createElement('div');
   containerElement.className = 'terminal-tab-container';
   containerElement.id = `terminal-tab-${tabId}`;
-  document.getElementById('terminals-area').appendChild(containerElement);
+  getElement('terminals-area').appendChild(containerElement);
   
   // Open terminal in container
   terminal.open(containerElement);
@@ -348,7 +348,7 @@ function createTab(isFirstTab = false) {
   }, 200);
   
   // Create tab object
-  const tab = {
+  const tab: Tab = {
     id: tabId,
     terminal: terminal,
     sshClient: null,
@@ -391,12 +391,12 @@ function createTab(isFirstTab = false) {
 }
 
 // Create tab UI element
-function createTabElement(tab) {
-  const tabsContainer = document.getElementById('tabs-container');
+function createTabElement(tab: Tab): void {
+  const tabsContainer = getElement('tabs-container');
   
   const tabElement = document.createElement('div');
   tabElement.className = 'tab';
-  tabElement.dataset.tabId = tab.id;
+  tabElement.dataset.tabId = String(tab.id);
   
   const labelElement = document.createElement('span');
   labelElement.className = 'tab-label';
@@ -425,9 +425,10 @@ function createTabElement(tab) {
   tabsContainer.appendChild(tabElement);
 }
 
+
 // Connect tab to SSH
-function connectTabSSH(tab, isFirstTab) {
-  const { username, password, hostInfo } = connectionInfo;
+function connectTabSSH(tab: Tab, isFirstTab: boolean): void {
+  const { username, password, hostInfo } = connectionInfo!;
   
   // Update status
   if (isFirstTab || activeTabId === tab.id) {
@@ -479,7 +480,7 @@ function connectTabSSH(tab, isFirstTab) {
       }, 100);
       
       // Handle stream data (output from server)
-      stream.on('data', (data) => {
+      stream.on('data', (data: Buffer) => {
         tab.terminal.write(data);
         
         // Record session data
@@ -513,7 +514,7 @@ function connectTabSSH(tab, isFirstTab) {
         }
       });
       
-      stream.stderr.on('data', (data) => {
+      stream.stderr.on('data', (data: Buffer) => {
         tab.terminal.write(data);
       });
     });
@@ -555,7 +556,7 @@ function connectTabSSH(tab, isFirstTab) {
 }
 
 // Switch to a specific tab
-function switchTab(tabId) {
+function switchTab(tabId: number): void {
   const tab = tabs.find(t => t.id === tabId);
   if (!tab) return;
   
@@ -602,7 +603,7 @@ function switchTab(tabId) {
   
   // Update status based on tab connection state
   if (tab.sshClient && tab.sshStream) {
-    updateStatus('connected', `Connected to ${connectionInfo.hostInfo.host}`);
+    updateStatus('connected', connectionInfo ? `Connected to ${connectionInfo.hostInfo.host}` : 'Connected');
   } else if (tab.sshClient) {
     updateStatus('connecting', 'Connecting...');
   } else {
@@ -611,12 +612,12 @@ function switchTab(tabId) {
 }
 
 // Handle new tab button click
-function handleNewTab() {
+function handleNewTab(): void {
   createTab(false);
 }
 
 // Handle close tab (with confirmation)
-function handleCloseTab(tabId) {
+function handleCloseTab(tabId: number): void {
   // Show confirmation dialog
   const confirmClose = confirm('Are you sure you want to close this tab?');
   
@@ -628,7 +629,7 @@ function handleCloseTab(tabId) {
 }
 
 // Close a specific tab
-function closeTab(tabId) {
+function closeTab(tabId: number): void {
   const tabIndex = tabs.findIndex(t => t.id === tabId);
   if (tabIndex === -1) return;
   
@@ -675,13 +676,13 @@ function closeTab(tabId) {
 }
 
 // Return to connection panel
-function returnToConnectionPanel() {
+function returnToConnectionPanel(): void {
   // Hide tab bar and terminals area
-  document.getElementById('tab-bar').classList.add('hidden');
-  document.getElementById('terminals-area').classList.add('hidden');
-  
+  getElement('tab-bar').classList.add('hidden');
+  getElement('terminals-area').classList.add('hidden');
+
   // Show connection panel
-  document.getElementById('connection-panel').classList.remove('hidden');
+  getElement('connection-panel').classList.remove('hidden');
   
   // Reset connection info
   connectionInfo = null;
@@ -708,36 +709,36 @@ function updateNewTabButton(): void {
 }
 
 // Get active tab
-function getActiveTab() {
+function getActiveTab(): Tab | undefined {
   return tabs.find(t => t.id === activeTabId);
 }
 
 // Update status indicator
-function updateStatus(status, text) {
-  const indicator = document.getElementById('status-indicator');
-  const statusText = document.getElementById('status-text');
-  
+function updateStatus(status: string, text: string): void {
+  const indicator = getElement('status-indicator');
+  const statusText = getElement('status-text');
+
   indicator.className = status;
   statusText.textContent = text;
 }
 
 // Show error message
-function showError(message) {
-  const errorDiv = document.getElementById('connection-error');
+function showError(message: string): void {
+  const errorDiv = getElement('connection-error');
   errorDiv.textContent = message;
   errorDiv.classList.remove('hidden');
 }
 
 // Update timer display
-function updateTimer(remainingSeconds) {
+function updateTimer(remainingSeconds: number): void {
   const minutes = Math.floor(remainingSeconds / 60);
   const seconds = remainingSeconds % 60;
   const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  
-  document.getElementById('time-remaining').textContent = timeString;
-  
+
+  getElement('time-remaining').textContent = timeString;
+
   // Change color when time is running out
-  const timerElement = document.getElementById('timer');
+  const timerElement = getElement('timer');
   if (remainingSeconds <= 60) {
     timerElement.style.color = '#ff4444';
   } else if (remainingSeconds <= 300) {
@@ -746,13 +747,13 @@ function updateTimer(remainingSeconds) {
 }
 
 // Show warning overlay
-function showWarning(message) {
-  const overlay = document.getElementById('warning-overlay');
-  const messageDiv = document.getElementById('warning-message');
-  
+function showWarning(message: string): void {
+  const overlay = getElement('warning-overlay');
+  const messageDiv = getElement('warning-message');
+
   messageDiv.textContent = message;
   overlay.classList.remove('hidden');
-  
+
   // Hide after 5 seconds
   setTimeout(() => {
     overlay.classList.add('hidden');
@@ -760,7 +761,7 @@ function showWarning(message) {
 }
 
 // Handle session end
-function handleSessionEnd(reason) {
+function handleSessionEnd(reason: string): void {
   console.log('Session ended:', reason);
   
   // Close all SSH connections
@@ -780,9 +781,9 @@ function handleSessionEnd(reason) {
 }
 
 // Show admin dialog
-function showAdminDialog() {
-  document.getElementById('admin-dialog').classList.remove('hidden');
-  document.getElementById('admin-password').focus();
+function showAdminDialog(): void {
+  getElement('admin-dialog').classList.remove('hidden');
+  getInputElement('admin-password').focus();
 }
 
 // Handle admin exit button click

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, globalShortcut, dialog, ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { ExamConfig } from './types';
+import type { ExamConfig } from './types';
 
 let mainWindow: BrowserWindow | null = null;
 let config: ExamConfig;
@@ -173,13 +173,12 @@ function createWindow() {
     }
   });
 
-  // Prevent leaving fullscreen (skip in dev mode)
-  mainWindow.on('leave-full-screen', (e: Electron.Event) => {
-    if (!devMode) {
-      e.preventDefault();
-      if (mainWindow) {
-        mainWindow.setFullScreen(true);
-      }
+  // Force back into fullscreen if the user manages to leave it (skip in dev mode).
+  // Note: Electron removed the ability to cancel this event via preventDefault()
+  // in v15, so we can only react after the fact by re-entering fullscreen.
+  mainWindow.on('leave-full-screen', () => {
+    if (!devMode && mainWindow) {
+      mainWindow.setFullScreen(true);
     }
   });
 
